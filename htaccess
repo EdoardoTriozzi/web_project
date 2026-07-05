@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Le richieste verso file o cartelle realmente esistenti (CSS, immagini, ecc.)
+# non vengono riscritte.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Tutte le altre richieste vengono reindirizzate al main dell'applicazione.
+RewriteRule ^(.*)$ index.php [QSA,L]

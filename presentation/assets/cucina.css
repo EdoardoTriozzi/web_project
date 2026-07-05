@@ -1,0 +1,118 @@
+/* cucina.css — stile della presentation della cucina.
+   Pensato per schermo largo (computer/tablet). Stile chiaro e leggibile. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:#f4f6f9; --surface:#ffffff; --surface-2:#eef2f7;
+  --ink:#1d2733; --soft:#5a6b7b; --dim:#8a99a8; --border:#dde4ec;
+  --info:#1769c4; --info-bg:#e6f1fb;
+  --warn:#b5710c; --warn-bg:#fbeedd;
+  --done:#1d8a5e; --done-bg:#e3f5ec;
+  --danger:#c0392b; --danger-bg:#fbeae8;
+  --radius:14px; --radius-sm:9px;
+}
+html, body { height:100%; }
+body { background:var(--bg); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; color:var(--ink); }
+
+.kitchen { min-height:100vh; display:flex; flex-direction:column; padding:16px; gap:14px; }
+
+/* Barra superiore */
+.k-top { flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; }
+.k-brand { display:flex; align-items:center; gap:12px; }
+.k-dot { width:26px; height:26px; border-radius:7px; background:var(--info); }
+.k-title { font-size:18px; font-weight:600; }
+.k-sub { font-size:13px; color:var(--soft); }
+.k-actions { display:flex; align-items:center; gap:10px; }
+.k-updated { font-size:13px; color:var(--dim); min-width:120px; text-align:right; }
+.k-btn { font-size:13px; font-weight:500; padding:9px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; text-decoration:none; display:inline-block; }
+.k-btn:hover { background:var(--surface-2); }
+.k-btn-ghost { color:var(--soft); }
+
+/* Tabellone a colonne */
+.k-board { flex:1 1 auto; display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; align-items:start; }
+.k-col { background:var(--surface-2); border-radius:var(--radius); padding:12px; min-height:60vh; }
+.k-col-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:0 4px; }
+.k-col-name { font-size:15px; font-weight:600; display:flex; align-items:center; gap:8px; }
+.k-bullet { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.k-bullet-new { background:var(--info); }
+.k-bullet-prep { background:var(--warn); }
+.k-bullet-done { background:var(--done); }
+.k-count { font-size:13px; font-weight:500; padding:2px 10px; border-radius:999px; }
+.k-count-new { background:var(--info-bg); color:var(--info); }
+.k-count-prep { background:var(--warn-bg); color:var(--warn); }
+.k-count-done { background:var(--done-bg); color:var(--done); }
+.k-col-body { display:flex; flex-direction:column; gap:10px; }
+
+/* Scheda ordine */
+.k-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; }
+.k-card-done { opacity:0.65; }
+.k-card-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.k-card-table { font-size:16px; font-weight:600; }
+.k-card-time { font-size:12px; color:var(--soft); }
+.k-lines { display:flex; flex-direction:column; gap:5px; }
+.k-line { display:flex; justify-content:space-between; align-items:center; font-size:14px; padding:6px 8px; border-radius:7px; }
+.k-line .q { font-weight:600; }
+/* Piatti di QUESTA cucina: in evidenza, con accento azzurro a sinistra e sfondo tenue. */
+.k-line-mia { background:var(--info-bg); border-left:4px solid var(--info); padding-left:8px; font-weight:600; }
+.k-line-mia .q { color:var(--info); }
+/* Piatti di ALTRE cucine: nettamente attenuati, per dare solo contesto. */
+.k-line-altrui { color:#aab6c2; opacity:0.75; }
+.k-line-altrui .q { font-weight:400; color:#aab6c2; }
+.k-card-btn { width:100%; margin-top:12px; border:none; border-radius:var(--radius-sm); font-size:14px; font-weight:500; padding:10px; cursor:pointer; }
+.k-card-btn-take { background:var(--info-bg); color:var(--info); }
+.k-card-btn-done { background:var(--done-bg); color:var(--done); }
+.k-empty-col { text-align:center; color:var(--dim); font-size:13px; padding:30px 0; }
+
+/* Riga ordine: nome a sinistra, quantita' + pulsantino rosso a destra */
+.k-line-nome { flex:1; }
+.k-line-right { display:flex; align-items:center; gap:8px; }
+/* Pulsantino per evidenziare la riga in rosso (temporaneo, lato browser) */
+.k-line-flag { width:16px; height:16px; border-radius:50%; border:2px solid var(--danger); background:transparent; cursor:pointer; flex:0 0 auto; padding:0; }
+.k-line-flag:hover { background:var(--danger-bg); }
+/* Riga evidenziata in rosso dall'utente: testo rosso e pallino pieno */
+.k-line-rosso .k-line-nome { color:var(--danger); font-weight:700; }
+.k-line-rosso .q { color:var(--danger); }
+.k-line-rosso .k-line-flag { background:var(--danger); }
+
+/* Filtro per tavolo: pulsante con pannello a comparsa */
+.k-filtro-wrap { position:relative; }
+.k-filtro-panel { display:none; position:absolute; top:calc(100% + 6px); right:0; z-index:50; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px; min-width:200px; box-shadow:0 8px 24px rgba(20,40,70,0.12); }
+.k-filtro-panel.show { display:block; }
+.k-filtro-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; font-size:13px; color:var(--soft); }
+.k-filtro-reset { font-size:12px; border:1px solid var(--border); background:var(--surface); border-radius:7px; padding:3px 9px; cursor:pointer; }
+.k-filtro-reset:hover { background:var(--surface-2); }
+.k-filtro-lista { display:flex; flex-direction:column; gap:6px; max-height:240px; overflow-y:auto; }
+.k-filtro-opt { display:flex; align-items:center; gap:8px; font-size:14px; padding:5px 7px; border-radius:7px; cursor:pointer; }
+.k-filtro-opt:hover { background:var(--surface-2); }
+.k-filtro-opt input { width:16px; height:16px; }
+.k-filtro-empty { font-size:13px; color:var(--dim); padding:8px 4px; }
+
+/* Disponibilita piatti: griglia 3 colonne */
+.k-dishes { flex:1 1 auto; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; align-content:start; }
+.k-dish { display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; }
+.k-dish-off .k-dish-name { color:var(--soft); }
+.k-dish-name { font-size:15px; font-weight:500; }
+.k-dish-state { font-size:13px; display:flex; align-items:center; gap:6px; margin-top:3px; color:var(--done); }
+.k-state-dot { width:7px; height:7px; border-radius:50%; background:var(--done); display:inline-block; }
+.k-dish-off .k-dish-state { color:var(--danger); }
+.k-dish-off .k-state-dot { background:var(--danger); }
+
+/* Interruttore */
+.k-switch { width:50px; height:29px; border-radius:999px; border:none; position:relative; cursor:pointer; flex:0 0 auto; transition:background .15s; }
+.k-switch.on { background:var(--done); }
+.k-switch.off { background:#cfd8e2; }
+.k-switch-knob { position:absolute; top:3px; width:23px; height:23px; border-radius:50%; background:#fff; transition:left .15s, right .15s; }
+.k-switch.on .k-switch-knob { right:3px; }
+.k-switch.off .k-switch-knob { left:3px; }
+
+.k-empty { grid-column:1 / -1; text-align:center; color:var(--dim); font-size:14px; padding:50px 0; }
+
+/* Su schermi stretti, scala le colonne */
+@media (max-width: 900px) {
+  .k-board { grid-template-columns:1fr; }
+  .k-dishes { grid-template-columns:1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .k-dishes { grid-template-columns:1fr; }
+  .k-actions { flex-wrap:wrap; }
+}
