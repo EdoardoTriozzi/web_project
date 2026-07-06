@@ -683,6 +683,7 @@ final class CRistorante
         $view = \Foundation\Presentazione::crea();
         $view->assign('nomeRistorante', $nomeRistorante);
         $view->assign('username', $username);
+        $view->assign('idRistorante', $ristoranteId);
         $view->display('ristorante/profilo.tpl');
     }
 
