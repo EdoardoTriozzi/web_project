@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Control;
 
 use Foundation\Session;
+use Foundation\Presentazione;
 use Foundation\FRistorante;
 use Foundation\PersistentManager;
 use Entity\Ristorante;
@@ -45,10 +46,47 @@ final class CAmministratore
     public function mostraRistoranti(array $params): void
     {
         $this->richiediAmministratore();
-        $ristoranti = FRistorante::loadAll();
 
-        // TODO(presentation): passare $ristoranti alla view dell'amministratore.
-        echo 'Ristoranti: ' . count($ristoranti) . '.';
+        $datiRistoranti = htmlspecialchars(
+            json_encode($this->ristorantiInArray()),
+            ENT_QUOTES, 'UTF-8'
+        );
+
+        $view = Presentazione::crea();
+        $view->assign('ristoranti', $datiRistoranti);
+        $view->display('admin/ristoranti.tpl');
+    }
+
+    /** Tutti i ristoranti come array semplici per il JSON. */
+    private function ristorantiInArray(): array
+    {
+        $out = [];
+        foreach (FRistorante::loadAll() as $r) {
+            $out[] = [
+                'id'       => (int) $r->getId(),
+                'nome'     => $r->getNome(),
+                'username' => $r->getUsername(),
+                'attivo'   => $r->isAttivo(),
+            ];
+        }
+        usort($out, function ($a, $b) {
+            return strnatcasecmp($a['nome'], $b['nome']);
+        });
+        return $out;
+    }
+
+    /** Risposta JSON con la lista aggiornata dei ristoranti. */
+    private function rispondiRistoranti(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['ok' => true, 'ristoranti' => $this->ristorantiInArray()]);
+    }
+
+    /** Risposta JSON di errore. */
+    private function rispondiErrore(string $messaggio): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['ok' => false, 'errore' => $messaggio]);
     }
 
     /**
@@ -71,7 +109,7 @@ final class CAmministratore
         $password = (string)($params['password'] ?? '');
 
         if ($nome === '' || $username === '' || $password === '') {
-            $this->errore('Nome, username e password del ristorante sono obbligatori.');
+            $this->rispondiErrore('Nome, username e password del ristorante sono obbligatori.');
             return;
         }
 
@@ -83,7 +121,7 @@ final class CAmministratore
         // I ristoranti non hanno genitore: store senza secondo argomento.
         PersistentManager::store($ristorante);
 
-        $this->redirect('index.php?controller=Amministratore&action=mostraRistoranti');
+        $this->rispondiRistoranti();
     }
 
     /**
@@ -119,13 +157,13 @@ final class CAmministratore
         $ristoranteId = (int)($params['ristoranteId'] ?? 0);
 
         if ($ristoranteId <= 0 || !FRistorante::exist($ristoranteId)) {
-            $this->errore('Ristorante non trovato.');
+            $this->rispondiErrore('Ristorante non trovato.');
             return;
         }
 
         PersistentManager::delete('Ristorante', $ristoranteId);
 
-        $this->redirect('index.php?controller=Amministratore&action=mostraRistoranti');
+        $this->rispondiRistoranti();
     }
 
     // ------------------------------------------------------------------
@@ -157,14 +195,14 @@ final class CAmministratore
 
         $ristorante = $ristoranteId > 0 ? FRistorante::load($ristoranteId) : null;
         if ($ristorante === null) {
-            $this->errore('Ristorante non trovato.');
+            $this->rispondiErrore('Ristorante non trovato.');
             return;
         }
 
         $ristorante->setAttivo($attivo);
         PersistentManager::update($ristorante);
 
-        $this->redirect('index.php?controller=Amministratore&action=mostraRistoranti');
+        $this->rispondiRistoranti();
     }
 
     private function errore(string $messaggio): void
