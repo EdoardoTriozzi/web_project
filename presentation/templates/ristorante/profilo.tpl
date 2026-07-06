@@ -8,6 +8,8 @@
   Variabili attese dal control (CRistorante::mostraProfilo):
     $nomeRistorante (stringa)
     $username       (stringa)
+    $idRistorante   (intero) — mostrato in sola lettura: e' il codice che i
+                    tavoli devono inserire al login.
 *}
 <!DOCTYPE html>
 <html lang="it">
@@ -37,6 +39,13 @@
       <div class="r-field" style="margin-bottom:6px;">
         <label>Username di accesso (non modificabile)</label>
         <input type="text" value="{$username|escape}" disabled class="r-input-disabled">
+      </div>
+      <div class="r-field" style="margin-bottom:6px;">
+        <label>ID ristorante &mdash; comunicalo ai tavoli per il login</label>
+        <input type="text" value="{$idRistorante}" disabled class="r-input-disabled">
+        <small style="display:block; margin-top:4px; color:#777;">
+          I clienti lo inseriscono nel campo &ldquo;Ristorante&rdquo; quando accedono dal tavolo.
+        </small>
       </div>
       <div class="r-field">
         <label>Nome del ristorante</label>
